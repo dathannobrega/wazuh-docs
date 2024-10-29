@@ -1,0 +1,2 @@
+# wazuh-docs
+Wazuh
