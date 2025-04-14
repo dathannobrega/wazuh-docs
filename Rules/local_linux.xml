@@ -1,0 +1,40 @@
+<group name="Linux,Security,ShellUsage">
+
+    <!-- Regra Base: Detecção de qualquer shell executado -->
+    <rule id="200001" level="0">
+        <decoded_as>sysmon-linux</decoded_as>
+        <field name="eventdata.commandLine">sh|bash|dash|zsh|ksh|tcsh|csh|fish</field>
+        <description>Execução de um shell detectada</description>
+        <group>shell_execution,linux,monitoramento</group>
+    </rule>
+
+    <!-- Regra Específica: Execução do curl dentro de um shell  -->
+    <rule id="200002" level="5">
+        <match field="eventdata.commandLine">curl</match>
+        <description>Uso do comando curl detectado</description>
+        <group>network_activity,linux,monitoramento</group>
+    </rule>
+    
+    <!-- Regra Específica: Execução do base64 dentro de um shell ou com pipe -->
+    <rule id="200003" level="7">
+        <match field="eventdata.commandLine">base64</match>
+        <description>Uso do comando base64 detectado, possível tentativa de ofuscação</description>
+        <group>command_execution,linux,security</group>
+    </rule>
+
+    <rule id="200006" level="10">
+        <decoded_as>sysmon-linux</decoded_as>
+        <regex field="eventdata.commandLine">(?:\\x[0-9A-Fa-f]{2}){2,}</regex>
+        <description>Execução de comando contendo sequência de escape hexadecimal suspeita (\xHH\xHH).</description>
+        <group>command_execution,linux,obfuscation,exploit</group>
+    </rule>
+    
+    <!-- Regra de Supressão de Alertas de Curl para Falsos Positivos -->
+    <rule id="200008" level="0">
+        <if_sid>200002</if_sid>
+        <match field="eventdata.commandLine">(curl -s --max-time 10|\\-\\-max-time 10|\\-\\-unix-socket|http://rspamd|172\\.22|/usr/bin/curl)</match>
+        <match field="data.system.computer">DTNUDIMAIL01</match>
+        <description>Supressão de alertas de curl para execuções com padrões conhecidos</description>
+    </rule>
+    
+</group>

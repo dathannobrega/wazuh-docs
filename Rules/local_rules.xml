@@ -1,0 +1,20 @@
+<!--
+  -  Windows Event Channel ruleset for the Sysmon channel 
+  -  Created by Wazuh, Inc.
+  -  Copyright (C) 2024, Dathan Nobrega Inc
+-->
+
+<!--
+  -  ID range: 100000 - 101000
+-->
+
+<group name="DataN,Security,Attacks">
+
+    <rule id="100000" level="3">
+        <field name="win.system">ProcessCreate</field>
+        <match>\\cmd.exe$|\\powershell.exe$</match>
+        <description>Detecção de execução de cmd.exe ou powershell.exe</description>
+        <group>process_creation,windows,monitoramento</group>
+    </rule>
+
+</group>
