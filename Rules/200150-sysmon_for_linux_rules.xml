@@ -26,7 +26,7 @@
         <options>no_full_log</options>
     </rule>
 <!--EventID = 3-->
-    <rule id="200152" level="3">
+    <rule id="200152" level="0">
         <if_sid>200150</if_sid>
         <field name="system.eventId">^3$</field>
         <description>Sysmon - Event 3: Network connection by $(eventdata.image)</description>
@@ -37,7 +37,7 @@
         <options>no_full_log</options>
     </rule>
 <!--EventID = 5-->
-    <rule id="200153" level="3">
+    <rule id="200153" level="0">
         <if_sid>200150</if_sid>
         <field name="system.eventId">^5$</field>
         <description>Sysmon - Event 5: Process terminated $(eventdata.image)</description>
@@ -59,7 +59,7 @@
         <options>no_full_log</options>
     </rule>
 <!--EventID = 11-->
-    <rule id="200155" level="3">
+    <rule id="200155" level="0">
         <if_sid>200150</if_sid>
         <field name="system.eventId">^11$</field>
         <description>Sysmon - Event 11: FileCreate by $(eventdata.image)</description>
@@ -81,7 +81,7 @@
         <options>no_full_log</options>
     </rule>
 <!--EventID = 23-->
-    <rule id="200157" level="3">
+    <rule id="200157" level="0">
         <if_sid>200150</if_sid>
         <field name="system.eventId">^23$</field>
         <description>Sysmon - Event 23: FileDelete (A file delete was detected) by $(eventdata.image)</description>
