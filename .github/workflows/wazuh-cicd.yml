@@ -6,10 +6,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+jobs:
   deploy:
     name: Deploy Local e Reiniciar Wazuh
-    needs: validate
-    # O deploy será executado em um runner self-hosted instalado na mesma máquina do Wazuh Manager.
     runs-on: self-hosted
     steps:
       - name: Fazer checkout do repositório
@@ -28,4 +27,4 @@ on:
       - name: Reiniciar Wazuh Manager
         run: |
           echo "Reiniciando o serviço do Wazuh Manager..."
-          systemctl restart wazuh-manager
+          sudo systemctl restart wazuh-manager
