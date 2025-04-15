@@ -1,0 +1,58 @@
+name: Wazuh CI/CD - Deploy Local
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate:
+    name: Validar arquivos XML (decoders e regras)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fazer checkout do repositório
+        uses: actions/checkout@v2
+
+      - name: Instalar xmllint para validação de XML
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+
+      - name: Validar decoders (XML)
+        run: |
+          for file in Decoders/*.xml; do
+            echo "Validando $file"
+            xmllint --noout "$file"
+          done
+
+      - name: Validar regras (XML)
+        run: |
+          for file in Rules/*.xml; do
+            echo "Validando $file"
+            xmllint --noout "$file"
+          done
+
+  deploy:
+    name: Deploy Local e Reiniciar Wazuh
+    needs: validate
+    # O deploy será executado em um runner self-hosted instalado na mesma máquina do Wazuh Manager.
+    runs-on: self-hosted
+    steps:
+      - name: Fazer checkout do repositório
+        uses: actions/checkout@v2
+
+      - name: Copiar Decoders para o Wazuh Manager
+        run: |
+          echo "Copiando arquivos de Decoders..."
+          cp -v Decoders/*.xml /var/ossec/etc/decoders/
+
+      - name: Copiar Regras para o Wazuh Manager
+        run: |
+          echo "Copiando arquivos de Regras..."
+          cp -v Rules/*.xml /var/ossec/etc/rules/
+
+      - name: Reiniciar Wazuh Manager
+        run: |
+          echo "Reiniciando o serviço do Wazuh Manager..."
+          systemctl restart wazuh-manager
