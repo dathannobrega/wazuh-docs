@@ -14,15 +14,17 @@ jobs:
       - name: Fazer checkout do repositório
         uses: actions/checkout@v2
 
-      - name: Copiar Decoders para o Wazuh Manager
+      - name: Copiar Decoders para o Wazuh Manager com privilégios de root
         run: |
           echo "Copiando arquivos de Decoders..."
-          cp -v Decoders/*.xml /var/ossec/etc/decoders/
+          sudo cp -v Decoders/*.xml /var/ossec/etc/decoders/
+          sudo chown wazuh:wazuh /var/ossec/etc/decoders/*.xml
 
-      - name: Copiar Regras para o Wazuh Manager
+      - name: Copiar Regras para o Wazuh Manager com privilégios de root
         run: |
           echo "Copiando arquivos de Regras..."
-          cp -v Rules/*.xml /var/ossec/etc/rules/
+          sudo cp -v Rules/*.xml /var/ossec/etc/rules/
+          sudo chown wazuh:wazuh /var/ossec/etc/rules/*.xml
 
       - name: Reiniciar Wazuh Manager
         run: |
