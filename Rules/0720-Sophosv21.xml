@@ -7,7 +7,7 @@
 
 <group name="sophos-fw,">
     <rule id="70020" level="0">
-      <decoded_as>sophos-fw</decoded_as>
+      <decoded_as>sophos-v21-av</decoded_as>
       <description>Sophos XG210 Firewall event</description>
     </rule>
   
