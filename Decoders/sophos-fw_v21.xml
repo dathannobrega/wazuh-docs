@@ -52,7 +52,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>log_subtype="(\w*)"</regex>
+  <regex>log_subtype="(\.*)"</regex>
   <order>log_subtype</order>
 </decoder>
 
@@ -83,7 +83,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>virus="(\w*)"</regex>
+  <regex>virus="(\.*)"</regex>
   <order>malware</order>
 </decoder>
 
@@ -96,8 +96,14 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>domainname="(\S+)"</regex>
-  <order>domain</order>
+  <regex>domainname="(\S+)"|src_domainname="(\S+)"</regex>
+  <order>src_domainname</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>dst_domainname="(\S+)"</regex>
+  <order>dst_domainname</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
@@ -152,7 +158,7 @@
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
   <regex>recv_bytes=(\d+)\s+</regex>
-  <order>bytes_received</order>
+  <order>recv_bytes</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
@@ -314,6 +320,36 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
+  <regex>quarantine_reason="(\.*)"</regex>
+  <order>quarantine_reason</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>spamaction="(\.*)"</regex>
+  <order>spamaction</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>mailid="(\.*)"</regex>
+  <order>mailid</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>mailsize=(\d+)</regex>
+  <order>mailsize</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>email_subject="(\.*)"|subject="(\.*)"</regex>
+  <order>email_subject</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>src_mac=(\w+:\w+:\w+:\w+:\w+:\w+)|client_physical_address="(\w+:\w+:\w+:\w+:\w+:\w+)"</regex>
   <order>src_mac</order>
 </decoder>
@@ -352,6 +388,24 @@
   <parent>sophos-v21-av</parent>
   <regex>client_host_name="(\.*)"</regex>
   <order>target_hostname</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>from_email_address="(\.*)"</regex>
+  <order>src_email</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>to_email_address="(\.*)"</regex>
+  <order>dst_email</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>av_policy_name="(\.*)"</regex>
+  <order>av_policy_name</order>
 </decoder>
 
 <!-- ATP -->
