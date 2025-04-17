@@ -102,7 +102,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_ip=(\d+.\d+.\d+.\d+)|destinationip=(\d+.\d+.\d+.\d+)</regex>
+  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)</regex>
   <order>src_ip</order>
 </decoder>
 
@@ -114,7 +114,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)</regex>
+  <regex>dst_ip=(\d+.\d+.\d+.\d+)|destinationip=(\d+.\d+.\d+.\d+)</regex>
   <order>dst_ip</order>
 </decoder>
 
@@ -314,7 +314,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_mac=(\w+:\w+:\w+:\w+:\w+:\w+)</regex>
+  <regex>src_mac=(\w+:\w+:\w+:\w+:\w+:\w+)|client_physical_address="(\w+:\w+:\w+:\w+:\w+:\w+)"</regex>
   <order>src_mac</order>
 </decoder>
 
@@ -322,6 +322,36 @@
   <parent>sophos-v21-av</parent>
   <regex>start_time=(\d+)</regex>
   <order>start_time</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>host=(\.*)</regex>
+  <order>host</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>updatedip=(\d+.\d+.\d+.\d+)|ipaddress="(\d+.\d+.\d+.\d+)"</regex>
+  <order>updatedip</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>leased_ip="(\d+.\d+.\d+.\d+)"</regex>
+  <order>leased_ip</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>raw_data="(\.*)"</regex>
+  <order>raw_data</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>client_host_name="(\.*)"</regex>
+  <order>target_hostname</order>
 </decoder>
 
 <!-- ATP -->
@@ -501,4 +531,170 @@
   <parent>sophos-v21-atp</parent>
   <regex>event_type="(\.*)"</regex>
   <order>event_type</order>
+</decoder>
+
+
+<!-- Sophos auth -->
+ <!-- messageid="17701" log_type="Event" log_component="Firewall Authentication" log_subtype="Authentication" status="Successful" user="test1" user_group="Open Group" client_used="Web Client" auth_mechanism="Local" reason="" src_ip="55.55.55.56" message="User test1 of group Open Group logged in successfully to Firewall through Local authentication mechanism from 55.55.55.56" name="test1" src_mac=""
+messageid="17702" log_type="Event" log_component="Firewall Authentication" log_subtype="Authentication" status="Failed" user="test1" user_group="" client_used="Web Client" auth_mechanism="Local,LDAP,LDAP" reason="wrong credentials" src_ip=" 55.55.55.56" message="User test1 failed to login to Firewall through Local,LDAP,LDAP authentication mechanism from 55.55.55.56 because of wrong credentials" name="" src_mac=""-->
+
+<decoder name="sophos-v21-auth">
+  <prematch>^messageid="\d+"\s+log_type="Event"\s+log_component="\.*"\s+log_subtype="\w+"\s+|^client_used="\.*"\s+auth_mechanism="\.*"\s+status="\.*"|^reason="\.*"\s+client_used="\.*"\s+auth_mechanism="\.*"\s+s</prematch>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>name="(\.*)"</regex>
+  <order>name</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>timestamp="(\.+)"|timestamp=(\d+)|event_timestamp="(\d+)"</regex>
+  <order>timestamp</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>device_name="(\.*)"</regex>
+  <order>device_name</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>device_model="(\.+)"</regex>
+  <order>device_model</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>device_serial_id="(\w+)"</regex>>
+  <order>device_serial_id</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>log_id=(\d+)</regex>
+  <order>log_id</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>log_type="(\w*)"</regex>
+  <order>log_type</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>log_component="(\.*)"</regex>
+  <order>log_component</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>log_subtype="(\w*)"</regex>
+  <order>log_subtype</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>log_version=(\d+)</regex>
+  <order>log_version</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>severity="(\w*)"\s</regex>
+  <order>severity</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>reason="(\.*)"</regex>
+  <order>reason</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>src_mac="(\w+:\w+:\w+:\w+:\w+:\w+)"</regex>
+  <order>src_mac</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>message="(\.*)"</regex>
+  <order>message</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>user="(\w*)"</regex>
+  <order>user_name</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>user_group="(\.*)"</regex>
+  <order>user_group</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>client_used="(\.*)"</regex>
+  <order>auth_client</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>access_type="(\.*)"</regex>
+  <order>access_type</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>auth_mechanism="(\.*)"</regex>
+  <order>auth_mechanism</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>src_ip="(\d+.\d+.\d+.\d+)"</regex>
+  <order>src_ip</order>
+</decoder>
+
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>dst_ip="(\d+.\d+.\d+.\d+)"</regex>
+  <order>dst_ip</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>status="(\S+)"</regex>
+  <order>status</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>start_time="(\d+)"</regex>
+  <order>start_time</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>bytes_sent="(\d+)"\s+</regex>
+  <order>sent_bytes</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>bytes_received="(\d+)"\s+</regex>
+  <order>bytes_received</order>
+</decoder>
+
+<decoder name="sophos-v21-auth">
+  <parent>sophos-v21-auth</parent>
+  <regex>src_country="(\w*)"</regex>
+  <order>src_country</order>
 </decoder>
