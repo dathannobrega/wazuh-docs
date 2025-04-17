@@ -21,6 +21,12 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
+  <regex>timestamp=(\d+)</regex>
+  <order>timestamp</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>device_id=(\w+)</regex>
   <order>device_id</order>
 </decoder>
@@ -40,7 +46,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>log_component="(\w*)"</regex>
+  <regex>log_component="(\.*)"</regex>
   <order>log_component</order>
 </decoder>
 
@@ -282,6 +288,41 @@
   <order>event_type</order>
 </decoder>
 
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>usergroupname="(\.*)"</regex>
+  <order>usergroupname</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>auth_client="(\.*)"</regex>
+  <order>auth_client</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>auth_mechanism="(\.*)"</regex>
+  <order>auth_mechanism</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>reason="(\.*)"</regex>
+  <order>reason</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>src_mac=(\w+:\w+:\w+:\w+:\w+:\w+)</regex>
+  <order>src_mac</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>start_time=(\d+)</regex>
+  <order>start_time</order>
+</decoder>
 
 <!-- ATP -->
 
@@ -296,7 +337,7 @@
 
 <decoder name="sophos-v21-atp">
   <parent>sophos-v21-atp</parent>
-  <regex>timestamp="(\.+)"</regex>
+  <regex>timestamp="(\.+)"|timestamp=(\d+)</regex>
   <order>timestamp</order>
 </decoder>
 
