@@ -18,10 +18,16 @@
   <order>device,date,time,timezone</order>
 </decoder>
 
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>device_model="(\.*)"</regex>
+  <order>device_model</order>
+</decoder>
+
 <!-- Identificadores do dispositivo -->
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>device_name="(\.*)"</regex>
+  <regex>device_name="(\.*)"|device_serial_id="(\.*)"</regex>
   <order>device_name</order>
 </decoder>
 
@@ -33,7 +39,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>device_id=(\w+)</regex>
+  <regex>device_id=(\w+) </regex>
   <order>device_id</order>
 </decoder>
 
@@ -114,25 +120,25 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)</regex>
+  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)|src_ip="(\d+.\d+.\d+.\d+)"</regex>
   <order>src_ip</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_country_code="(\.*)"\s+|src_country_code="(\.*)"$|src_country_code=(\.*)\s+|src_country_code=(\.*)$</regex>
+  <regex>src_country_code="(\.*)"\s+|src_country_code="(\.*)"$|src_country_code=(\.*)\s+|src_country_code=(\.*)$|src_country="(\.*)"</regex>
   <order>src_country</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_ip=(\d+.\d+.\d+.\d+)|destinationip=(\d+.\d+.\d+.\d+)</regex>
+  <regex>dst_ip=(\d+.\d+.\d+.\d+)|destinationip=(\d+.\d+.\d+.\d+)|dst_ip="(\d+.\d+.\d+.\d+)"</regex>
   <order>dst_ip</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_country_code="(\.*)"\s+|dst_country_code="(\.*)"$|dst_country_code=(\.*)\s+|dst_country_code=(\.*)$</regex>
+  <regex>dst_country_code="(\.*)"\s+|dst_country_code="(\.*)"$|dst_country_code=(\.*)\s+|dst_country_code=(\.*)$|dst_country="(\.*)"</regex>
   <order>dst_country</order>
 </decoder>
 
@@ -184,7 +190,6 @@
   <regex>FTP_url="(\S+)"</regex>
   <order>FTP_url</order>
 </decoder>
-
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
@@ -248,13 +253,13 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>application_technology="(\.+)"</regex>
+  <regex>application_technology="(\.*)"</regex>
   <order>application_technology</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>application_category="(\.+)"</regex>
+  <regex>application_category="(\.*)"</regex>
   <order>application_category</order>
 </decoder>
 
@@ -496,7 +501,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>hb_status=(\d+)</regex>
+  <regex>hb_status=(\d+)|hb_status="(\.*)"</regex>
   <order>hb_status</order>
 </decoder>
 
@@ -508,15 +513,10 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>app_is_cloud=(\w+)</regex>
+  <regex>app_is_cloud=(\w+)|app_is_cloud="(\w+)"</regex>
   <order>app_is_cloud</order>
 </decoder>
 
-<decoder name="sophos-v21-av">
-  <parent>sophos-v21-av</parent>
-  <regex>app_is_cloud=(\w+)</regex>
-  <order>app_is_cloud</order>
-</decoder>
 
 <!-- ATP -->
 
