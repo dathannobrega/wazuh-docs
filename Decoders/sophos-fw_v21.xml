@@ -5,7 +5,7 @@
 -->
 
 <decoder name="sophos-v21-av">
-  <prematch>^device="\w*"\s+date=\d+-\d+-\d+\s+time=\d+:\d+:\d+\s+timezone=|device_name="(\.*)"\s+timestamp="(\.*)"\s+device_model="(\.*)"\s+device_serial_id="(\.*)"\s+log_id=</prematch>
+  <prematch>^device="\w*"\s+date=\d+-\d+-\d+\s+time=\d+:\d+:\d+\s+timezone=|device_name="(\.*)"\s+timestamp="(\.*)"\s+device_model="(\.*)"\s+device_serial_id="(\.*)"\s+log_id=|^messageid="\d+"\s+log_type="Event"\s+log_component="\.*"\s+log_subtype="\w+"\s+|^client_used="\.*"\s+auth_mechanism="\.*"\s+status="\.*"|^reason="\.*"\s+client_used="\.*"\s+auth_mechanism="\.*"\s+s</prematch>
 </decoder>
 
 <!-- device="SFW" date=2016-12-02 time=18:48:18 timezone="GMT" device_name="SFVUNL" device_id=C01001K234RXPA1 log_id=034806208001 log_type="Anti-Virus" log_component="HTTPS" log_subtype="Virus" priority=Critical fw_rule_id=2 user_name="rich" iap=13 virus="EICAR-AV-Test" url="https://secure.eicar.org/eicar.com" domainname="secure.eicar.org" src_ip=192.168.73.220 src_country_code=R1 dst_ip=213.211.198.58 dst_country_code=DEU protocol="TCP" src_port=51499 dst_port=443 sent_bytes=0 recv_bytes=353 -->
@@ -27,14 +27,44 @@
 <!-- Identificadores do dispositivo -->
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>device_name="(\.*)"|device_serial_id="(\.*)"</regex>
+  <regex>device_name="(\.*)"</regex>
   <order>device_name</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>device_serial_id="([^"]*)"|Appliance_Key=([A-Za-z0-9_-]+)</regex>
+  <order>device_serial_id,device_serial_id</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
   <regex>timestamp="(\.+)"|timestamp=(\d+)</regex>
   <order>timestamp</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>ep_event_time=(\d+)</regex>
+  <order>ep_event_time</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>ep_uuid=(\w+)</regex>
+  <order>ep_uuid</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>ep_health=(\w+)</regex>
+  <order>ep_health</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>log_version=(\d+)</regex>
+  <order>log_version</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
@@ -71,7 +101,7 @@
 <!-- Dados de evento -->
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>priority=(\w*)\s</regex>
+  <regex>priority=(\w*)\s|severity="(\w*)"\s|severity="([^"]*)"</regex>
   <order>priority</order>
 </decoder>
 
@@ -120,7 +150,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)|src_ip="(\d+.\d+.\d+.\d+)"</regex>
+  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)|src_ip="(\d+.\d+.\d+.\d+)"|ep_ip=(\d+.\d+.\d+.\d+)</regex>
   <order>src_ip</order>
 </decoder>
 
@@ -187,8 +217,32 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>message="(\.*)"</regex>
+  <regex>message="(\.*)"|signature_msg="(\.*)"</regex>
   <order>message</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>signature_id=(\d+)</regex>
+  <order>signature_id</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>rule_priority=(\d+)</regex>
+  <order>rule_priority</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>idp_policy_id=(\d+)</regex>
+  <order>idp_policy_id</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>classification="(\.*)"</regex>
+  <order>classification</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
@@ -211,7 +265,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_zone="(\.*)"|srczone="(\.*)</regex>
+  <regex>src_zone="(\.*)"|srczone="(\.*)"</regex>
   <order>src_zone</order>
 </decoder>
 
@@ -223,7 +277,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_zone="(\.*)"|dstzone="(\.*)</regex>
+  <regex>dst_zone="(\.*)"|dstzone="(\.*)"</regex>
   <order>dst_zone</order>
 </decoder>
 
@@ -241,8 +295,14 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>category="(\S+)"</regex>
+  <regex>category="(\.*)"</regex>
   <order>category</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>platform="(\.*)"</regex>
+  <order>platform</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
@@ -392,7 +452,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>host=(\.*)</regex>
+  <regex>ep_name=(\w+)|host=(\.*)</regex>
   <order>host</order>
 </decoder>
 
@@ -416,7 +476,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>client_host_name="(\.*)"</regex>
+  <regex>client_host_name="(\.*)"|target="(\.*)"</regex>
   <order>target_hostname</order>
 </decoder>
 
@@ -483,7 +543,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>in_interface="(\.*)"</regex>
+  <regex>in_interface="(\.*)"|interface="(\w+)"</regex>
   <order>in_interface</order>
 </decoder>
 
@@ -513,7 +573,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>hb_status=(\d+)|hb_status="(\.*)"</regex>
+  <regex>hb_status=(\d+)|hb_status="(\.*)"|hb_status="([^"]*)"</regex>
   <order>hb_status</order>
 </decoder>
 
@@ -527,6 +587,12 @@
   <parent>sophos-v21-av</parent>
   <regex>app_is_cloud=(\w+)|app_is_cloud="(\w+)"</regex>
   <order>app_is_cloud</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>gatewayname="(\.*)"</regex>
+  <order>gatewayname</order>
 </decoder>
 
 
@@ -553,17 +619,7 @@
   <order>device_serial_id</order>
 </decoder>
 
-<decoder name="sophos-v21-atp">
-  <parent>sophos-v21-atp</parent>
-  <regex>log_version=(\d+)</regex>
-  <order>log_version</order>
-</decoder>
 
-<decoder name="sophos-v21-atp">
-  <parent>sophos-v21-atp</parent>
-  <regex>severity="(\w*)"\s</regex>
-  <order>severity</order>
-</decoder>
 
 <decoder name="sophos-v21-atp">
   <parent>sophos-v21-atp</parent>
@@ -654,48 +710,18 @@ messageid="17702" log_type="Event" log_component="Firewall Authentication" log_s
 
 <decoder name="sophos-v21-auth">
   <parent>sophos-v21-auth</parent>
-  <regex>log_subtype="(\w*)"</regex>
-  <order>log_subtype</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>log_version=(\d+)</regex>
-  <order>log_version</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>severity="(\w*)"\s</regex>
-  <order>severity</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>reason="(\.*)"</regex>
-  <order>reason</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
   <regex>src_mac="(\w+:\w+:\w+:\w+:\w+:\w+)"</regex>
   <order>src_mac</order>
 </decoder>
 
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>message="(\.*)"</regex>
-  <order>message</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>user="(\w*)"</regex>
   <order>user_name</order>
 </decoder>
 
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>user_group="(\.*)"</regex>
   <order>user_group</order>
 </decoder>
@@ -706,35 +732,16 @@ messageid="17702" log_type="Event" log_component="Firewall Authentication" log_s
   <order>auth_client</order>
 </decoder>
 
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>access_type="(\.*)"</regex>
   <order>access_type</order>
 </decoder>
 
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>auth_mechanism="(\.*)"</regex>
   <order>auth_mechanism</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>src_ip="(\d+.\d+.\d+.\d+)"</regex>
-  <order>src_ip</order>
-</decoder>
-
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>dst_ip="(\d+.\d+.\d+.\d+)"</regex>
-  <order>dst_ip</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>status="(\S+)"</regex>
-  <order>status</order>
 </decoder>
 
 <decoder name="sophos-v21-auth">
