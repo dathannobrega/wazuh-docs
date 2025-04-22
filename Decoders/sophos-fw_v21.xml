@@ -175,6 +175,18 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
+  <regex>recv_pkts=(\d+)\s+</regex>
+  <order>recv_pkts</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>sent_pkts=(\d+)\s+</regex>
+  <order>sent_pkts</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>message="(\.*)"</regex>
   <order>message</order>
 </decoder>
@@ -193,25 +205,25 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_zone_type="(\.*)"</regex>
+  <regex>src_zone_type="(\.*)"|srczonetype="(\.*)"</regex>
   <order>src_zone_type</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_zone="(\.*)"</regex>
+  <regex>src_zone="(\.*)"|srczone="(\.*)</regex>
   <order>src_zone</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_zone_type="(\.*)"</regex>
+  <regex>dst_zone_type="(\.*)"|dstzonetype="(\.*)"</regex>
   <order>dst_zone_type</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_zone="(\.*)"</regex>
+  <regex>dst_zone="(\.*)"|dstzone="(\.*)</regex>
   <order>dst_zone</order>
 </decoder>
 
@@ -507,7 +519,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>app_resolved_by="(\.*)"</regex>
+  <regex>app_resolved_by="(\.*)"|appresolvedby="(\.*)"</regex>
   <order>app_resolved_by</order>
 </decoder>
 
