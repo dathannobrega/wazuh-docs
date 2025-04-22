@@ -2,6 +2,10 @@
   -  Sophos v21 Firewall decoders
   -  Created by Dathan Nobrega.
   -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+  - Logs de RED nao foram implementados ainda.
+  - Logs de SD-WAN nao foram implementados ainda.
+  - Logs de SSL/TLS Filter (Inspection) nao foram implementados ainda.
+  - System health (events) logs nao foram implementados ainda.
 -->
 
 <decoder name="sophos-v21-av">
@@ -132,7 +136,7 @@
 <!-- Informações de rede -->
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>url="(\S+)"|url=(\d+.\d+.\d+.\d+)</regex>
+  <regex>url="(\S+)"|url=(\d+.\d+.\d+.\d+)|source="(\S+)"</regex>
   <order>url</order>
 </decoder>
 
@@ -150,7 +154,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)|src_ip="(\d+.\d+.\d+.\d+)"|ep_ip=(\d+.\d+.\d+.\d+)</regex>
+  <regex>src_ip=(\d+.\d+.\d+.\d+)|sourceip=(\d+.\d+.\d+.\d+)|src_ip="(\d+.\d+.\d+.\d+)"|ep_ip=(\d+.\d+.\d+.\d+)|localip=(\d+.\d+.\d+.\d+)|ipaddress=(\d+.\d+.\d+.\d+)</regex>
   <order>src_ip</order>
 </decoder>
 
@@ -162,7 +166,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>dst_ip=(\d+.\d+.\d+.\d+)|destinationip=(\d+.\d+.\d+.\d+)|dst_ip="(\d+.\d+.\d+.\d+)"</regex>
+  <regex>dst_ip=(\d+.\d+.\d+.\d+)|destinationip=(\d+.\d+.\d+.\d+)|dst_ip="(\d+.\d+.\d+.\d+)"|remotepeer=(\d+.\d+.\d+.\d+)|remote_ip=(\d+.\d+.\d+.\d+)</regex>
   <order>dst_ip</order>
 </decoder>
 
@@ -193,13 +197,13 @@
 <!-- Transferência de dados -->
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>sent_bytes=(\d+)\s+</regex>
+  <regex>sent_bytes=(\d+)\s+|bytes_sent=(\d+)</regex>
   <order>sent_bytes</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>recv_bytes=(\d+)\s+</regex>
+  <regex>recv_bytes=(\d+)\s+|bytes_recv=(\d+)</regex>
   <order>recv_bytes</order>
 </decoder>
 
@@ -337,7 +341,7 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
-  <regex>status="(\S+)"</regex>
+  <regex>status="(\.*)"</regex>
   <order>status</order>
 </decoder>
 
@@ -421,6 +425,43 @@
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
+  <regex>filesize=(\d+)</regex>
+  <order>filesize</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>filename="(\.*)"</regex>
+  <order>filename</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>filetype="(\.*)"</regex>
+  <order>filetype</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>sha1sum="(\w+)"</regex>
+  <order>sha1sum</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>Mode="(\.*)"</regex>
+  <order>Mode</order>
+</decoder>
+
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>start_time=(\d+)|starttime=(\d+)</regex>
+  <order>start_time</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
   <regex>email_subject="(\.*)"|subject="(\.*)"</regex>
   <order>email_subject</order>
 </decoder>
@@ -444,11 +485,6 @@
 </decoder>
 
 
-<decoder name="sophos-v21-av">
-  <parent>sophos-v21-av</parent>
-  <regex>start_time=(\d+)</regex>
-  <order>start_time</order>
-</decoder>
 
 <decoder name="sophos-v21-av">
   <parent>sophos-v21-av</parent>
@@ -466,6 +502,18 @@
   <parent>sophos-v21-av</parent>
   <regex>leased_ip="(\d+.\d+.\d+.\d+)"</regex>
   <order>leased_ip</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>local_network="(\S*)"</regex>
+  <order>local_network</order>
+</decoder>
+
+<decoder name="sophos-v21-av">
+  <parent>sophos-v21-av</parent>
+  <regex>remote_network="(\S*)"</regex>
+  <order>remote_network</order>
 </decoder>
 
 <decoder name="sophos-v21-av">
@@ -607,11 +655,6 @@
 
 <!-- Extração dos campos básicos -->
 
-<decoder name="sophos-v21-atp">
-  <parent>sophos-v21-atp</parent>
-  <regex>device_model="(\.+)"</regex>
-  <order>device_model</order>
-</decoder>
 
 <decoder name="sophos-v21-atp">
   <parent>sophos-v21-atp</parent>
@@ -676,12 +719,6 @@ messageid="17702" log_type="Event" log_component="Firewall Authentication" log_s
   <parent>sophos-v21-auth</parent>
   <regex>device_name="(\.*)"</regex>
   <order>device_name</order>
-</decoder>
-
-<decoder name="sophos-v21-auth">
-  <parent>sophos-v21-auth</parent>
-  <regex>device_model="(\.+)"</regex>
-  <order>device_model</order>
 </decoder>
 
 <decoder name="sophos-v21-auth">
