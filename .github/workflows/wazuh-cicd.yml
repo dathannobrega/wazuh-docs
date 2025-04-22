@@ -26,6 +26,12 @@ jobs:
           sudo cp -v Rules/*.xml /var/ossec/etc/rules/
           sudo chown -R wazuh:wazuh /var/ossec/etc/rules/
 
+      - name: Copiar Arquivos de grupos para o Wazuh Manager com sudo
+        run: |
+          echo "Copiando arquivos de grupos..."
+          sudo cp -v Shared/* /var/ossec/etc/shared/
+          sudo chown -R wazuh:wazuh /var/ossec/etc/shared/
+
       - name: Reiniciar Wazuh Manager
         run: |
           echo "Reiniciando o serviço do Wazuh Manager..."
