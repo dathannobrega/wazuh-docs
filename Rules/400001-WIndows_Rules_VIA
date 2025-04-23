@@ -9,15 +9,45 @@
     <description>Desligamento anormal detectado no Windows</description>
     <group>windows,shutdown,</group>
 </rule>
-<rule id="400005" level="9" timeframe="3600">
+<rule id="400003" level="9" timeframe="3600">
     <if_sid>400001</if_sid>
     <time>20:00:00</time>
     <description>Desligamento fora do horário comercial</description>
     <group>windows,after_hours,</group>
 </rule>
-<rule id="400005" level="7">
+<rule id="400004" level="7">
     <!-- quando o uma midia removivel é colocado no host -->
     <if_sid>61614</if_sid>
     <description>Mídia removível conectada</description>
     <group>windows,usb,</group>
 </rule>
+<rule id="100005" level="10">
+    <if_sid>18116</if_sid>
+    <match>Group:.*Administrators</match>
+    <description>Usuário adicionado ao grupo de Administradores</description>
+    <group>windows,group_changes,privilege_escalation,</group>
+</rule>
+  
+<rule id="100006" level="7">
+    <if_sid>18117</if_sid>
+    <match>Group:.*Administrators</match>
+    <description>Usuário removido do grupo de Administradores</description>
+    <group>windows,group_changes,</group>
+</rule>
+<rule id="100008" level="12">
+<if_sid>18102</if_sid>
+    <!-- Devemos alterar o nome das cotnas de acordo com o padrão de segurança da empresa, para evitar o uso de contas padrão. -->
+    <regex>User Name:\s*(Administrator|admin|test|guest)</regex>
+    <description>Login com conta padrão detectado</description>
+    <group>windows,authentication_success,default_accounts,</group>
+</rule>
+
+<rule id="100009" level="13">
+    <if_sid>18102</if_sid>
+    <match>Logon Type:\s*(2|10)</match>
+    <regex>User Name:\s*(svc_|service_)\w+</regex>
+    <description>Uso interativo de conta de serviço detectado</description>
+    <group>windows,misuse,service_account,</group>
+</rule>
+  
+  
