@@ -1,0 +1,7 @@
+<rule id="100004" level="7">
+    <if_sid>18102</if_sid>
+    <match>Logon Type:\s*10</match>
+    <description>Logon remoto detectado (RDP) — possível uso da mesma conta em várias máquinas</description>
+    <group>windows,authentication_success,rdp,</group>
+</rule>
+  
