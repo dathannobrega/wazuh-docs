@@ -1,0 +1,40 @@
+<!--
+    -  Watch Guard Firewall decoders
+    -  Created by Dathan Nobrega.
+    -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+    -  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    -  DOCUMENTATION: https://www.watchguard.com/help/docs/fireware/11/en-US/log_catalog/index.html
+    -  LOGS: https://www.watchguard.com/help/docs/fireware/11/en-US/log_catalog/logs.html
+
+-->
+
+<!-- watchguard-syslog-predecoder -->
+<decoder name="watchguard-syslog">
+    <prematch>^\w{3} +\d{1,2} \d{2}:\d{2}:\d{2} .+? (?:IKE|VPN|IPSEC|PPTP|SSLVPN)</prematch>
+    <!-- syslog padrão: timestamp host processo:ID: mensagem -->
+    <regex>^\w{3} +\d{1,2} \d{2}:\d{2}:\d{2} (\S+) .*? (\d{8}): (.*)</regex>
+    <order>srcip,id,message</order>
+  </decoder>
+  
+
+  <!-- watchguard-vpn-decoder -->
+<decoder name="watchguard-vpn">
+    <parent>watchguard-syslog</parent>
+    <!-- captura campos importantes sem precisar 1 decoder por ID -->
+    <regex>
+      (?i)                                   # ignore case
+      (?:
+          # Alarm BOVPN tunnel up/down
+          (?P<tunnel_type>\w+VPN) tunnel '(?P<tunnel>[^']+)' .+? local (?P<local>[0-9./]+) .+? remote (?P<remote>[0-9./]+) .+? gateway '(?P<gateway>[^']+)' is (?P<status>\w+)
+        | # L2TP session create/delete
+          (?:Updated|Deleted) Mobile VPN with L2TP session for user '(?P<l2tp_user>[^']+)', virtual IP address '(?P<l2tp_vip>[0-9.]+)'
+        | # SSL / PPTP login / logout
+          Mobile VPN with (?:SSL|PPTP) user (?:'?(?P<ssl_user>\w+)?'?\s*)?logged (?P<ssl_action>in|off)\. Virtual IP address is (?P<ssl_vip>[0-9.]+)
+        | # IKEv2 generic failure
+          IKEv2 (?P<exchange_type>[A-Z_]+) exchange from (?P<local_addr>[0-9.:]+) to (?P<peer_addr>[0-9.:]+) failed\..*? Reason=(?P<reason>.+)
+        | # IKE phase-1 success
+          (?P<tunnel_type2>\w+VPN) phase-1 (?P<nego_mode>\w+)-mode completed successfully as (?P<nego_role>\w+) for '(?P<gateway2>[^']+)' gateway endpoint\.
+      )
+    </regex>
+  </decoder>
+  

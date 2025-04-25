@@ -1,11 +1,19 @@
-<rule id="400001" level="5">
-    <!-- quando o computador é desligado -->
-    <if_sid>18107</if_sid>
+<!--
+  -  Microsoft Windows rules Via
+  -  Author: Dathan Nobrega.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
+
+<!-- 18100 Group of windows rules. -->
+<rule id="400001" level="10">
+    <if_sid>18100</if_sid>
+    <id>^1074$|^6006$|^6005$</id>
     <description>Desligamento ou reinicialização normal do Windows</description>
-    <group>windows,system_shutdown,</group>
+    <group>windows,shutdown,</group>
 </rule>
 <rule id="400002" level="10">
-    <if_sid>18108</if_sid>
+    <if_sid>18100</if_sid>
+    <id>^6008$</id>
     <description>Desligamento anormal detectado no Windows</description>
     <group>windows,shutdown,</group>
 </rule>
@@ -15,19 +23,24 @@
     <description>Desligamento fora do horário comercial</description>
     <group>windows,after_hours,</group>
 </rule>
+<!-- 61614 é utilizado para (Sysmon - Event 12:) -->
 <rule id="400004" level="7">
     <!-- quando o uma midia removivel é colocado no host -->
-    <if_sid>61614</if_sid>
+    <if_sid>18100</if_sid>
+    <id>^6416$|^43$|^2003$</id>
     <description>Mídia removível conectada</description>
     <group>windows,usb,</group>
 </rule>
-<rule id="100005" level="10">
+
+<!-- 18116 é utilizado para (User account locked out (multiple login errors) -->
+
+<!-- <rule id="100005" level="10">
     <if_sid>18116</if_sid>
     <match>Group:.*Administrators</match>
     <description>Usuário adicionado ao grupo de Administradores</description>
     <group>windows,group_changes,privilege_escalation,</group>
-</rule>
-  
+</rule> -->
+
 <rule id="100006" level="7">
     <if_sid>18117</if_sid>
     <match>Group:.*Administrators</match>
