@@ -26,14 +26,38 @@
         <description>Desligamento fora do horário comercial</description>
         <group>windows,after_hours,</group>
     </rule>
-    <!-- 61614 é utilizado para (Sysmon - Event 12:) -->
-    <rule id="400004" level="7">
-        <!-- quando o uma midia removivel é colocado no host -->
+    
+    <!-- Regras referentes a USB -->
+    <rule id="401000" level="10">
         <if_sid>18100</if_sid>
-        <id>^6416$|^43$|^2003$</id>
-        <description>Mídia removível conectada</description>
-        <group>windows,usb,</group>
-    </rule>
+        <field name="win.system.eventID">2100</field>
+        <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
+        <description>Dispositivo USB foi conectado</description>
+        <group>windows,usb,attached,</group>
+      </rule>
+    <rule id="401001" level="12">
+        <if_sid>18100</if_sid>
+        <field name="win.system.eventID">1010</field>
+        <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
+        <description>Dispositivo USB foi removido inesperadamente</description>
+        <group>windows,usb,removed,</group>
+      </rule>
+
+    <rule id="401002" level="7">
+        <if_sid>18100</if_sid>
+        <field name="win.system.eventID">2900</field>
+        <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
+        <description>Remoção segura de dispositivo USB iniciada (UMDF Host solicitado para desligar)</description>
+        <group>windows,usb,removed,safe,</group>
+      </rule>
+      
+      <rule id="401003" level="7">
+        <if_sid>18100</if_sid>
+        <field name="win.system.eventID">2901</field>
+        <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
+        <description>Remoção segura de dispositivo USB concluída (UMDF Host desligado)</description>
+        <group>windows,usb,removed,safe,</group>
+      </rule>
     
     <!--  Essas 3 regras sao refentes a mudancas no grupo admin, tive que desativar a orinal pois dava pouco detalhe -->
     <rule id="60144" level="10">
