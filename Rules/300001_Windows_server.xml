@@ -1,7 +1,13 @@
-<rule id="100004" level="7">
-    <if_sid>18102</if_sid>
-    <match>Logon Type:\s*10</match>
-    <description>Logon remoto detectado (RDP) — possível uso da mesma conta em várias máquinas</description>
-    <group>windows,authentication_success,rdp,</group>
-</rule>
-  
+<group name="Windows_Server,sysvol,">
+    <rule id="300001" level="7">
+        <if_sid>18102</if_sid>
+        <match>Logon Type:\s*10</match>
+        <description>Logon remoto detectado (RDP) — possível uso da mesma conta em várias máquinas</description>
+        <group>windows,authentication_success,rdp,</group>
+    </rule>
+    <rule id="300002" level="12">
+      <if_group>syscheck</if_group>
+      <field name="file">C:\\Windows\\SYSVOL\\.*</field>
+      <description>Alteração detectada em SYSVOL (GPO / Scripts de domínio)</description>
+    </rule>
+</group>

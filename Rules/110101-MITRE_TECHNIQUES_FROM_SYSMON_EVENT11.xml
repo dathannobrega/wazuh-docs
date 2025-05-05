@@ -12,14 +12,14 @@
 </rule>
 <!-- Sysmon - Event 11: FileCreate by $(win.eventdata.image) -->
 <rule id="110102" level="3">
-<if_sid>61613</if_sid>
-<field name="win.eventdata.RuleName">^technique_id=T1064,technique_name=Scripting$</field>
-<description>Sysmon - Event 11: FileCreate by $(win.eventdata.image)</description>
-<mitre>
-<id>T1064</id>
-</mitre>
-<options>no_full_log</options>
-<group>sysmon_event_11,</group>
+    <if_sid>61613</if_sid>
+    <field name="win.eventdata.RuleName">^technique_id=T1064,technique_name=Scripting$</field>
+    <description>Sysmon - Event 11: FileCreate by $(win.eventdata.image)</description>
+    <mitre>
+    <id>T1064</id>
+    </mitre>
+    <options>no_full_log</options>
+    <group>sysmon_event_11,</group>
 </rule>
 <!-- Sysmon - Event 11: FileCreate by $(win.eventdata.image) -->
 <rule id="110103" level="3">
