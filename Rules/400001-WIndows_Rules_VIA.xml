@@ -22,7 +22,7 @@
     </rule>
     <rule id="400003" level="9">
         <if_sid>400001</if_sid>
-        <time>6 pm - 8 am</time>
+        <time>8 pm - 8 am</time>
         <description>Desligamento fora do horário comercial</description>
         <group>windows,after_hours,</group>
     </rule>
@@ -133,6 +133,18 @@
         <id>T1110</id> <!-- Brute Force -->
     </mitre>
     </rule>
+
+    <rule id="400105" level="10">
+        <if_sid>60122</if_sid>
+        <field name="win.eventdata.status">^0xC0000193$</field>
+        <description>Tentativa de Login com uma conta Expirada</description>
+        <group>windows,login,out_of_hours,</group>
+        <time>3 pm - 5 am</time> <!-- fora do horário comercial (das 18h até as 08h do outro dia nao sei pq ele so registra em ZULU) -->
+        <mitre>
+            <id>T1078</id>
+        </mitre>
+    </rule>
+
     <rule id="400105" level="10">
         <if_sid>60106</if_sid>
         <description>Login realizado fora do horário comercial</description>
@@ -184,6 +196,12 @@
         <mitre>
           <id>T1070.004</id>
         </mitre>
+    </rule>
+
+    <rule id="400202" level="7">
+        <if_sid>18101</if_sid>
+        <field name="win.system.eventID">^4719$</field>
+        <description>A audit policy was changed"</description>
     </rule>
 
     <!-- Regras Referentes a Servicos-->
