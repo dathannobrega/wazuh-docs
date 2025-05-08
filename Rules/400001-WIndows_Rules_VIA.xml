@@ -152,7 +152,7 @@
         <if_sid>60106</if_sid>
         <description>Login realizado fora do horário comercial</description>
         <group>windows,login,out_of_hours,</group>
-        <time>6 pm - 8 am</time> <!-- fora do horário comercial (das 18h até as 08h do outro dia) -->
+        <time>3 pm - 5 am</time> <!-- fora do horário comercial (das 18h até as 08h do outro dia nao sei pq ele so registra em ZULU) -->
         <mitre>
             <id>T1078</id>
         </mitre>
@@ -176,14 +176,13 @@
     </rule>
 
 
-      <!-- Logs referentes a erros no sistema-->
+      <!-- Alertas referentes a Logs -->
     <rule id="400130" level="12">
         <if_sid>63110</if_sid>
         <field name="win.system.eventID">^1104$</field>
         <description>Logs de Seguranca está cheio</description>
     </rule>
 
-    <!-- Logs referentes a Limpeza de logs -->
     <rule id="400200" level="12">
         <if_sid>63104</if_sid>
         <field name="win.system.eventID">^104$</field>
@@ -201,5 +200,37 @@
           <id>T1070.004</id>
         </mitre>
     </rule>
+
+    <!-- Regras Referentes a Servicos-->
+    <!-- Limitacoes: utilizando o comando powershell start/stop-service-->
+    <rule id="400300" level="10">
+        <if_sid>18100</if_sid>
+        <field name="win.system.eventID">^7036$</field>
+        <description>Serviço $(win.eventdata.serviceName) foi iniciado//parado</description>
+        <group>windows,services,started,</group>
+        <mitre>
+            <id>T1050</id>
+        </mitre>
+    </rule>
+    <!-- Captura falha inesperada de serviço -->
+    <rule id="100102" level="10">
+        <if_sid>18107</if_sid>
+        <field name="win.system.eventID">^7034$</field>
+        <description>Serviço $(win.eventdata.serviceName)falhou inesperadamente no Windows</description>
+    </rule>
+
+    <rule id="400303" level="10">
+        <if_sid>61603</if_sid> <!-- Sysmon Event ID 1 -->
+        <field name="win.eventdata.image" type="pcre2">(?i)\\sc\.exe</field>
+        <field name="win.eventdata.commandLine" type="pcre2">(?i)\b(start|stop)\b</field>
+        <description>Uso do comando SC para iniciar ou parar um serviço</description>
+        <group>windows,service-control,cmdline</group>
+        <mitre>
+          <id>T1569.002</id> <!-- System Services: Service Execution -->
+        </mitre>
+      </rule>
+
+      
+
 
 </group>
