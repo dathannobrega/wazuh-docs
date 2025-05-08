@@ -137,13 +137,13 @@
     <rule id="400105" level="10">
         <if_sid>60122</if_sid>
         <field name="win.eventdata.status">^0xC0000193$</field>
-        <description>Tentativa de Login com uma conta Expirada</description>
+        <description>Tentativa de Login com uma conta Expirada</description> <!-- Aqui ele pega como status e nao substatus -->
         <group>windows,login,</group>
     </rule>
 
     <rule id="400110" level="12">
         <if_sid>60122</if_sid>
-        <field name="win.eventdata.status">^0xC0000072$</field>
+        <field name="win.eventdata.subStatus">^0xC0000072$</field>
         <description>Tentativa de Login com uma conta Desabilitada</description>
         <group>windows,login,failed</group>
     </rule>
@@ -173,6 +173,20 @@
         <mitre>
             <id>T1005</id>
         </mitre>
+    </rule>
+
+    <!-- Se tiver mais de contas CRIADAS em curto período(10m) -->
+    <rule id="400120" level="12" frequency="5" timeframe="600">
+        <if_matched_sid>60109</if_matched_sid>
+        <description>Alto número de contas criadas em um curto período</description>
+        <group>windows,adduser,account_changed,</group>
+    </rule>
+
+    <!-- Se tiver mais de contas REMOVIDAS em curto período(10m) -->
+    <rule id="400131" level="12" frequency="5" timeframe="600">
+        <if_matched_sid>60111</if_matched_sid>
+        <description>Alto número de contas removidas em um curto período</description>
+        <group>windows,deluser,account_changed,</group>
     </rule>
 
 
