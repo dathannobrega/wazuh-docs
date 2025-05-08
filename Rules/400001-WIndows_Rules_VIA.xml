@@ -138,14 +138,17 @@
         <if_sid>60122</if_sid>
         <field name="win.eventdata.status">^0xC0000193$</field>
         <description>Tentativa de Login com uma conta Expirada</description>
-        <group>windows,login,out_of_hours,</group>
-        <time>3 pm - 5 am</time> <!-- fora do horário comercial (das 18h até as 08h do outro dia nao sei pq ele so registra em ZULU) -->
-        <mitre>
-            <id>T1078</id>
-        </mitre>
+        <group>windows,login,</group>
     </rule>
 
-    <rule id="400105" level="10">
+    <rule id="400110" level="12">
+        <if_sid>60122</if_sid>
+        <field name="win.eventdata.status">^0xC0000072$</field>
+        <description>Tentativa de Login com uma conta Desabilitada</description>
+        <group>windows,login,failed</group>
+    </rule>
+
+    <rule id="400111" level="10">
         <if_sid>60106</if_sid>
         <description>Login realizado fora do horário comercial</description>
         <group>windows,login,out_of_hours,</group>
@@ -155,7 +158,7 @@
         </mitre>
     </rule>
     <!-- Evento criado para registrar Alteracao de senha -->
-    <rule id="400106" level="3">
+    <rule id="400112" level="3">
         <if_sid>60103</if_sid> <!-- Windows Security warning event com AUDIT SUCCESS-->
         <field name="win.system.eventID">^4724$</field>
         <description>A senha do usuario $(win.eventdata.targetUserName) foi alterada</description>
@@ -163,7 +166,7 @@
             <id>T1005</id>
         </mitre>
     </rule>
-    <rule id="400107" level="10" frequency="5" timeframe="300">
+    <rule id="400113" level="10" frequency="5" timeframe="300">
         <if_matched_sid>400106</if_matched_sid>
         <field name="win.system.eventID">^4724$</field>
         <description>Varias Alteracoes de senha em um curto periodo</description>
