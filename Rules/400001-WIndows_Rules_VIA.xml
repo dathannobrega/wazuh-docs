@@ -175,6 +175,18 @@
         </mitre>
     </rule>
 
+    <rule id="400114" level="12" timeframe="86400">
+        <if_matched_sid>60109</if_matched_sid> <!-- criacao -->
+        <if_sid>60111</if_sid>                 <!-- remocao -->
+        <same_field>win.eventdata.targetUserName</same_field>
+        <description>Usuário removido em menos de 24h após ser criado: $(win.eventdata.targetUserName)</description>
+        <group>windows,user_deleted_soon,account_changed,</group>
+        <mitre>
+          <id>T1078</id> <!-- Valid Accounts -->
+        </mitre>
+      </rule>
+      
+
     <!-- Se tiver mais de contas CRIADAS em curto período(10m) -->
     <rule id="400120" level="12" frequency="5" timeframe="600">
         <if_matched_sid>60109</if_matched_sid>
