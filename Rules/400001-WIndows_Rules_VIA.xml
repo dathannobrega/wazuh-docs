@@ -10,13 +10,13 @@
 <group name="windows,">
     <rule id="400001" level="10">
         <if_sid>18102</if_sid>
-        <id>^1074$|^6006$|^6005$</id>
+        <field name="win.system.eventID">^1074$|^6006$|^6005$</field>
         <description>Desligamento ou reinicialização anormal do Windows</description>
         <group>windows,shutdown,</group>
     </rule>
     <rule id="400002" level="10">
         <if_sid>18102</if_sid>
-        <id>^6008$</id>
+        <field name="win.system.eventID">^6008$</field>
         <description>Desligamento anormal detectado no Windows</description>
         <group>windows,shutdown,</group>
     </rule>
@@ -28,35 +28,20 @@
     </rule>
     
     <!-- Regras referentes a USB -->
-    <rule id="401000" level="10">
-        <if_sid>18100</if_sid>
-        <field name="win.system.eventID">2100</field>
+     <!-- 60009 = Windows informational event/ Limitacao, nao saber se foi removido com seguranca/ alguns duplicado (coloquei ignore)-->
+    <rule id="401000" level="10" ignore="10">
+        <if_sid>60009</if_sid>
+        <field name="win.system.eventID">^2100$</field>
         <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
         <description>Dispositivo USB foi conectado</description>
         <group>windows,usb,attached,</group>
       </rule>
-    <rule id="401001" level="12">
-        <if_sid>18100</if_sid>
-        <field name="win.system.eventID">1010</field>
+    <rule id="401001" level="7" ignore="10">
+        <if_sid>60009</if_sid>
+        <field name="win.system.eventID">^1010$|^2901$|^1006$|^1008$|^2900$</field>
         <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
-        <description>Dispositivo USB foi removido inesperadamente</description>
+        <description>Dispositivo USB foi removido</description>
         <group>windows,usb,removed,</group>
-      </rule>
-
-    <rule id="401002" level="7">
-        <if_sid>18100</if_sid>
-        <field name="win.system.eventID">2900</field>
-        <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
-        <description>Remoção segura de dispositivo USB iniciada (UMDF Host solicitado para desligar)</description>
-        <group>windows,usb,removed,safe,</group>
-      </rule>
-      
-      <rule id="401003" level="7">
-        <if_sid>18100</if_sid>
-        <field name="win.system.eventID">2901</field>
-        <field name="win.system.providerName">Microsoft-Windows-DriverFrameworks-UserMode</field>
-        <description>Remoção segura de dispositivo USB concluída (UMDF Host desligado)</description>
-        <group>windows,usb,removed,safe,</group>
       </rule>
     
     <!--  Essas 3 regras sao refentes a mudancas no grupo admin, tive que desativar a orinal pois dava pouco detalhe -->
