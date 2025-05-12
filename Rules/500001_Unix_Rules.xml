@@ -29,7 +29,7 @@
         <group>command_execution,linux,obfuscation,exploit</group>
     </rule>
     
-    <!-- Regra de Supressão de Alertas de Curl para Falsos Positivos -->
+    <!-- Essa Regra Ignora Uso do curl se for padrao em alguma maquina-->
     <rule id="200008" level="0">
         <if_sid>200002</if_sid>
         <match field="eventdata.commandLine">(curl -s --max-time 10|\\-\\-max-time 10|\\-\\-unix-socket|http://rspamd|172\\.22|/usr/bin/curl)</match>

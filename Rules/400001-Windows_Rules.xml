@@ -6,6 +6,8 @@
 
 <!-- 400000 Group of windows rules. -->
 <var name="DEF_ACCOUNTS">Administrator|admin|test|guest</var>
+<var name="SRV_ACCOUNTS">srv_test|servico|limbo|vaultguar</var>
+
 
 <group name="windows,">
     <rule id="400001" level="10">
@@ -140,6 +142,18 @@
         <description>Tentativa de Login com uma conta Expirada</description> <!-- Aqui ele pega como status e nao substatus -->
         <group>windows,login,</group>
     </rule>
+
+    <!-- <rule id="400106" level="15">
+        <if_sid>60106</if_sid>
+        <match>SRV_ACCOUNTS</match>
+        <field name="win.eventdata.logonType">^2$|^10$</field>
+        <description>Uso interativo da conta de serviço: $(win.eventdata.targetUserName)</description>
+        <group>windows,login,service_account,misuse,</group>
+        <mitre>
+          <id>T1078</id>
+        </mitre>
+      </rule> -->
+      
 
     <rule id="400110" level="12">
         <if_sid>60122</if_sid>
