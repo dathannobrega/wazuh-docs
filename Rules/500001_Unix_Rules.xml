@@ -1,40 +1,96 @@
+<!--
+  -  Microsoft Unix rules Custom
+  -  Author: Dathan Nobrega.
+  -  This program is a free software; you can redistribute it and/or modify it under the terms of GPLv2.
+-->
 <group name="Linux,Security,ShellUsage">
 
     <!-- Regra Base: Detecção de qualquer shell executado -->
-    <rule id="200001" level="0">
-        <decoded_as>sysmon-linux</decoded_as>
+    <rule id="600001" level="0">
         <field name="eventdata.commandLine">sh|bash|dash|zsh|ksh|tcsh|csh|fish</field>
         <description>Execução de um shell detectada</description>
         <group>shell_execution,linux,monitoramento</group>
     </rule>
 
     <!-- Regra Específica: Execução do curl dentro de um shell  -->
-    <rule id="200002" level="5">
+    <rule id="600005" level="5">
         <match field="eventdata.commandLine">curl</match>
         <description>Uso do comando curl detectado</description>
         <group>network_activity,linux,monitoramento</group>
     </rule>
     
     <!-- Regra Específica: Execução do base64 dentro de um shell ou com pipe -->
-    <rule id="200003" level="7">
+    <rule id="600010" level="7">
         <match field="eventdata.commandLine">base64</match>
         <description>Uso do comando base64 detectado, possível tentativa de ofuscação</description>
         <group>command_execution,linux,security</group>
     </rule>
-
-    <rule id="200006" level="10">
-        <decoded_as>sysmon-linux</decoded_as>
+    
+    <rule id="600011" level="10">
         <regex field="eventdata.commandLine">(?:\\x[0-9A-Fa-f]{2}){2,}</regex>
         <description>Execução de comando contendo sequência de escape hexadecimal suspeita (\xHH\xHH).</description>
         <group>command_execution,linux,obfuscation,exploit</group>
     </rule>
     
     <!-- Essa Regra Ignora Uso do curl se for padrao em alguma maquina-->
-    <rule id="200008" level="0">
+    <rule id="600015" level="0">
         <if_sid>200002</if_sid>
         <match field="eventdata.commandLine">(curl -s --max-time 10|\\-\\-max-time 10|\\-\\-unix-socket|http://rspamd|172\\.22|/usr/bin/curl)</match>
         <match field="data.system.computer">DTNUDIMAIL01</match>
         <description>Supressão de alertas de curl para execuções com padrões conhecidos</description>
     </rule>
-    
+
+    <!-- Regra login ssh utilziando conta root-->
+    <rule id="600020" level="5">
+        <if_sid>5715</if_sid>
+        <match field="data.dstuser">root</match>
+        <description>Login SSH utilizando conta root detectado</description>
+        <group>ssh_login,linux,monitoramento</group>
+    </rule>
+
+
+    <!-- Regras referentes a Login-->
+    <!-- Toda vez que uma sessao para o root for criada esse alerta vai ser trigado, utilizando o comando su command-->
+    <rule id="600100" level="12">
+        <if_sid>5501</if_sid>
+        <match field="data.dstuser">root(uid=0)</match>
+        <description>Login root detectado feito por $(data.srcuser)</description>
+        <group>login,linux,monitoramento</group>
+    </rule>
+
+    <rule id="600110" level="10">
+        <if_sid>5300</if_sid>
+        <match>(su:auth):authentication failure; |FAILED SU</match>
+        <description>Falha de login utilizando o comando SU para $()</description>
+        <group>authentication_success,gdpr_IV_32.2,gpg13_7.1,gpg13_7.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,pci_dss_10.2.5,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3,</group>
+    </rule>
+
+  <!-- Adição ao grupo sudo -->
+  <rule id="600130" level="10">
+    <match>usermod.*add '.*' to group 'sudo'</match>
+    <description>Usuário adicionado ao grupo sudo</description>
+    <group>group_changes,rootcheck</group>
+  </rule>
+
+  <!-- Adição ao grupo sudo (shadow group) -->
+  <rule id="600131" level="10">
+    <match>usermod.*add '.*' to shadow group 'sudo'</match>
+    <description>Usuário adicionado ao shadow group sudo</description>
+    <group>group_changes,rootcheck</group>
+  </rule>
+
+  <!-- Alteração de membros do grupo sudo -->
+  <rule id="600132" level="10">
+    <match>gpasswd.*members of group sudo set by</match>
+    <description>Membros do grupo sudo modificados</description>
+    <group>group_changes,rootcheck</group>
+  </rule>
+
+  <!-- Comando usermod via sudo (ação administrativa) -->
+  <rule id="600133" level="7">
+    <match>sudo.*COMMAND=/usr/sbin/usermod</match>
+    <description>Comando usermod executado via sudo</description>
+    <group>group_changes,rootcheck</group>
+  </rule>
+
 </group>
