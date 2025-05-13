@@ -128,17 +128,17 @@
     <group>cron_changes,linux,monitoramento</group>
   </rule>
 
-<rule id="400200" level="12" frequency="2" timeframe="3600">
+  <rule id="600200" level="12" frequency="2" timeframe="3600">
     <if_matched_sid>5902</if_matched_sid>
     <description>Alto número de contas criadas em um período de 1 hora</description>
     <group>linux,adduser,account_changed</group>
-</rule>
+  </rule>
 
-<rule id="400201" level="12" frequency="2" timeframe="3600">
+  <rule id="600201" level="12" frequency="2" timeframe="3600">
     <if_matched_sid>5903</if_matched_sid>
     <description>Alto número de contas removidas em um período de 1 hora</description>
     <group>linux,deluser,account_changed</group>
-</rule>
+  </rule>
 
 
 </group>
