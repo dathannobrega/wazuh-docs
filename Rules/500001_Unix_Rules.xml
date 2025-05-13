@@ -34,7 +34,7 @@
     
     <!-- Essa Regra Ignora Uso do curl se for padrao em alguma maquina-->
     <rule id="600015" level="0">
-        <if_sid>200002</if_sid>
+        <if_sid>600005</if_sid>
         <match field="eventdata.commandLine">(curl -s --max-time 10|\\-\\-max-time 10|\\-\\-unix-socket|http://rspamd|172\\.22|/usr/bin/curl)</match>
         <match field="data.system.computer">DTNUDIMAIL01</match>
         <description>Supressão de alertas de curl para execuções com padrões conhecidos</description>
@@ -66,31 +66,79 @@
     </rule>
 
   <!-- Adição ao grupo sudo -->
+  <!-- 
+  May 12 10:37:49 DTNUDIHOMWEB01 gpasswd[3729]: members of group sudo set by root to
+  May 12 10:39:09 DTNUDIHOMWEB01 usermod[3745]: add 'ubuntu' to group 'sudo'
+  May 12 10:39:09 DTNUDIHOMWEB01 usermod[3745]: add 'ubuntu' to shadow group 'sudo'
+  -->
+  <!-- Usuário adicionado ao grupo sudo -->
   <rule id="600130" level="10">
-    <match>usermod.*add '.*' to group 'sudo'</match>
-    <description>Usuário adicionado ao grupo sudo</description>
+    <decoded_as>linux_usermod_group</decoded_as>
+    <field name="group">^sudo$|^root$</field>
+    <description>Usuário adicionado ao grupo $(group)</description>
     <group>group_changes,rootcheck</group>
   </rule>
 
-  <!-- Adição ao grupo sudo (shadow group) -->
-  <rule id="600131" level="10">
-    <match>usermod.*add '.*' to shadow group 'sudo'</match>
-    <description>Usuário adicionado ao shadow group sudo</description>
+    <rule id="600131" level="7">
+    <decoded_as>linux_usermod_group</decoded_as>
+    <description>Usuário adicionado ao grupo $(group)</description>
+    <group>group_changes,rootcheck</group>
+  </rule>
+  
+  <!-- Alteração de membros do grupo sudo via gpasswd -->
+  <rule id="600132" level="14">
+    <decoded_as>gpasswd</decoded_as>
+    <field name="group">^sudo$|^root$</field>
+    <description>Membros do grupo $(group) modificados</description>
     <group>group_changes,rootcheck</group>
   </rule>
 
-  <!-- Alteração de membros do grupo sudo -->
-  <rule id="600132" level="10">
-    <match>gpasswd.*members of group sudo set by</match>
-    <description>Membros do grupo sudo modificados</description>
+<!-- Alteração de membros do grupogpasswd -->
+  <rule id="600133" level="7">
+    <decoded_as>gpasswd</decoded_as>
+    <description>Membros do grupo $(group) modificados</description>
     <group>group_changes,rootcheck</group>
   </rule>
 
   <!-- Comando usermod via sudo (ação administrativa) -->
-  <rule id="600133" level="7">
+  <rule id="600134" level="7">
     <match>sudo.*COMMAND=/usr/sbin/usermod</match>
     <description>Comando usermod executado via sudo</description>
     <group>group_changes,rootcheck</group>
   </rule>
+
+    <!-- Edição das tarefas cron pelo próprio usuário -->
+  <rule id="600140" level="10">
+    <match field="eventdata.commandLine">crontab\s+-e\b</match>
+    <description>Usuário $(data.srcuser) editou suas tarefas cron</description>
+    <group>cron_changes,linux,monitoramento</group>
+  </rule>
+
+  <!-- Listagem de crontab por root (pode indicar inspeção antes de modificação) -->
+  <rule id="600141" level="5">
+    <match field="eventdata.commandLine">crontab\s+-l\b</match>
+    <description>Usuário $(data.srcuser) listou tarefas cron de $(data.dstuser)</description>
+    <group>cron_inspection,linux,monitoramento</group>
+  </rule>
+
+  <!-- Remoção de todas as tarefas cron de um usuário -->
+  <rule id="600142" level="10">
+    <match field="eventdata.commandLine">crontab\s+-r\b</match>
+    <description>Usuário $(data.srcuser) removeu todas as suas tarefas cron</description>
+    <group>cron_changes,linux,monitoramento</group>
+  </rule>
+
+<rule id="400200" level="12" frequency="2" timeframe="3600">
+    <if_matched_sid>5902</if_matched_sid>
+    <description>Alto número de contas criadas em um período de 1 hora</description>
+    <group>linux,adduser,account_changed</group>
+</rule>
+
+<rule id="400201" level="12" frequency="2" timeframe="3600">
+    <if_matched_sid>5903</if_matched_sid>
+    <description>Alto número de contas removidas em um período de 1 hora</description>
+    <group>linux,deluser,account_changed</group>
+</rule>
+
 
 </group>
